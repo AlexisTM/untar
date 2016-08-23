@@ -56,6 +56,9 @@ namespace untar {
 
 	ifstream* tarEntry::wantToExtract(int * filesize, size_t * startInMemory)
 	{
+		if (_tarfile != nullptr) {
+			_tarfile->seekg(_startOfFile, ios_base::beg);
+		}
 		*filesize = _filesize;
 		*startInMemory = _startOfFile;
 		return _tarfile;
@@ -76,6 +79,27 @@ namespace untar {
 		// Do I have to delete every entry of the map or does map.clear() clean it ?
 		entries.clear();
 		_tarfile.close();
+	}
+
+	tarEntry * tarFile::find(string filename)
+	{
+		auto it = entries.find(filename);
+		
+		if (it == entries.end())
+			return nullptr;
+
+		return it->second;
+	}
+
+	ifstream * tarFile::find(string filename, int * filesize, size_t * start)
+	{
+		tarEntry * myEntry = find(filename);
+		if (myEntry == nullptr) {
+			*filesize = 0;
+			*start = 0;
+			return nullptr;
+		}
+		return myEntry->wantToExtract(filesize, start);
 	}
 
 	void tarFile::open(char * filename, int filter)

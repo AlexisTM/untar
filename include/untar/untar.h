@@ -68,6 +68,7 @@ namespace untar {
 		tarEntry(tarEntry const & cpy);
 		// Destructor
 		~tarEntry();
+
 		// Get the tar filename where this file comes from
 		string getParentFilename();
 		// Get the file size
@@ -112,13 +113,16 @@ namespace untar {
 		// The destructor 
 		~tarFile();
 
+		// Wrapping the map.find(string). Returns the tarEntry, or Null on error;
+		tarEntry* find(string filename);
+		// Wrapping the map.find(string). Returns the stream of file, filesize and start bit
+		ifstream * tarFile::find(string filename, int * filesize, size_t * start);
+		
 		// Open a file in case you didn't instanciated the class with a filename
 		void open(char * filename, int filter = All);
 		// Get the filename of the opened file
 		string getFilename();
 		// Map of tarEntries, containing all the files
-		// TODO 
-		// Put entries as private and wrap the find function in the class
 		static map<string, tarEntry *> entries;
 		// This is the tar filestream
 		static std::ifstream _tarfile;
