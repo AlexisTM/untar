@@ -13,7 +13,6 @@
 
 
 #include <stdio.h>
-#include <tchar.h>
 #include <fstream>
 #include <string>
 #include <map>
@@ -80,7 +79,7 @@ namespace untar {
 		// Get the tar type. Is it a DirType, FileType, SymlinkType ?
 		tarEntryType getType();
 		// Get all usefull data we need to extract our data in one call
-		ifstream * tarEntry::wantToExtract(int * filesize, size_t * startInMemory);
+		ifstream * wantToExtract(int * filesize, size_t * startInMemory);
 
 	private:
 		// The stream, this is the same as the one of the tarFile object. Opened by default.
@@ -116,7 +115,7 @@ namespace untar {
 		// Wrapping the map.find(string). Returns the tarEntry, or Null on error;
 		tarEntry* find(string filename);
 		// Wrapping the map.find(string). Returns the stream of file, filesize and start bit
-		ifstream * tarFile::find(string filename, int * filesize, size_t * start);
+		ifstream * find(string filename, int * filesize, size_t * start);
 		
 		// Open a file in case you didn't instanciated the class with a filename
 		void open(char * filename, int filter = All);
@@ -131,7 +130,7 @@ namespace untar {
 		// Read the file and store entries
 		void getAllEntries(int filter = All);
 		// Add a new tarEntry into the map (entries)
-		void tarFile::addEntryToMap(string filename, int filesize, tarEntryType type);
+		void addEntryToMap(string filename, int filesize, tarEntryType type);
 		// Check if the header is Null. The tar file ends on two Null headers
 		bool isNullHeader(const char *p);
 		// Verify the checksum, actually, it stops the reading on error
