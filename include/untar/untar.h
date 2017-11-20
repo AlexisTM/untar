@@ -21,8 +21,6 @@
 
 
 namespace untar {
-	
-	using namespace std;
 
 	// Type of file in the TAR documentation
 	enum tarEntryType {
@@ -52,34 +50,34 @@ namespace untar {
 	};
 
 	// The tarEntry class represents an ENTRY inside a TAR file. It can be a File, Dir, Symlink, ... Important parts to be able to use it : 
-	// tarEntry::tarEntry(string filename, int filesize, size_t startOfFile, tarEntryType type, string parentTarFilename, ifstream * _tarfile);
-	// ifstream * tarEntry::wantToExtract(int * filesize, size_t * startInMemory);
-	// string getFilename();
-	// size_t getStartingByte();
+	// tarEntry::tarEntry(std::string filename, int filesize, std::size_t startOfFile, tarEntryType type, std::string parentTarFilename, std::ifstream * _tarfile);
+	// std::ifstream * tarEntry::wantToExtract(int * filesize, std::size_t * startInMemory);
+	// std::string getFilename();
+	// std::size_t getStartingByte();
 	class tarEntry {
 		friend class tarFile;
 	public :
 		// To be able to create null tarEntry
 		tarEntry();
 		// Default constructor, prefer this one
-		tarEntry(string filename, int filesize, size_t startOfFile, tarEntryType type, string parentTarFilename, ifstream * _tarfile);
+		tarEntry(std::string filename, int filesize, std::size_t startOfFile, tarEntryType type, std::string parentTarFilename, std::ifstream * _tarfile);
 		// Constructor to avoid error for people who failed the instantiation. Could disapear when I will have properly documented the library.
 		tarEntry(tarEntry const & cpy);
 		// Destructor
 		~tarEntry();
 
 		// Get the tar filename where this file comes from
-		string getParentFilename();
+		std::string getParentFilename();
 		// Get the file size
 		int getFileSize();
 		// Get the filename (containing the path)
-		string getFilename();
+		std::string getFilename();
 		// Get the starting byte in the stream
-		size_t getStartingByte();
+		std::size_t getStartingByte();
 		// Get the tar type. Is it a DirType, FileType, SymlinkType ?
 		tarEntryType getType();
 		// Get all usefull data we need to extract our data in one call
-		ifstream * wantToExtract(int * filesize, size_t * startInMemory);
+		std::ifstream * wantToExtract(int * filesize, std::size_t * startInMemory);
 
 	private:
 		// The stream, this is the same as the one of the tarFile object. Opened by default.
@@ -88,20 +86,20 @@ namespace untar {
 		// For future usage, in my project in SFML
 		bool _extracted;
 		// Starting byte in the tar file (stream)
-		size_t _startOfFile;
+		std::size_t _startOfFile;
 		// Filesize
 		int _filesize;
 		// Filename (containing the path)
-		string _filename;
+		std::string _filename;
 		// Type of the entry
 		tarEntryType _type;
 		// What is my dad TAR ?
-		string  _parentTarFilename;
+		std::string  _parentTarFilename;
 	};
 	
 	// tarFile represents a TAR FILE opened. Important parts to be able to use it : 
 	// tarFile::tarFile(char * filename, int filter = All);
-	// static map<string, tarEntry *> tarFile::entries
+	// static map<std::string, tarEntry *> tarFile::entries
 	class tarFile {
 		friend class tarEntry;
 	public:
@@ -112,17 +110,17 @@ namespace untar {
 		// The destructor 
 		~tarFile();
 
-		// Wrapping the map.find(string). Returns the tarEntry, or Null on error;
-		tarEntry* find(string filename);
-		// Wrapping the map.find(string). Returns the stream of file, filesize and start bit
-		ifstream * find(string filename, int * filesize, size_t * start);
+		// Wrapping the map.find(std::string). Returns the tarEntry, or Null on error;
+		tarEntry* find(std::string filename);
+		// Wrapping the map.find(std::string). Returns the stream of file, filesize and start bit
+		std::ifstream * find(std::string filename, int * filesize, std::size_t * start);
 		
 		// Open a file in case you didn't instanciated the class with a filename
 		void open(char * filename, int filter = All);
 		// Get the filename of the opened file
-		string getFilename();
+		std::string getFilename();
 		// Map of tarEntries, containing all the files
-		static map<string, tarEntry *> entries;
+		static std::map<std::string, tarEntry *> entries;
 		// This is the tar filestream
 		static std::ifstream _tarfile;
 
@@ -130,13 +128,13 @@ namespace untar {
 		// Read the file and store entries
 		void getAllEntries(int filter = All);
 		// Add a new tarEntry into the map (entries)
-		void addEntryToMap(string filename, int filesize, tarEntryType type);
+		void addEntryToMap(std::string filename, int filesize, tarEntryType type);
 		// Check if the header is Null. The tar file ends on two Null headers
 		bool isNullHeader(const char *p);
 		// Verify the checksum, actually, it stops the reading on error
 		static int verifyChecksum(const char *p);
 		// Used to read the header
-		static int parseoct(const char *p, size_t n);
+		static int parseoct(const char *p, std::size_t n);
 		// Did we get entries ? If yes, don't get them again
 		bool _get_all_entries;
 		// Remember where comes the data form

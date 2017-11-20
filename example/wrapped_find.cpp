@@ -18,17 +18,17 @@ int main(int argc, char** argv)
     // If we want to find a file called Mommy.txt, use the map.find method
     // First define the key you are looking for. This is the filename in the tar
     // For example : myFolder/Mommy.txt
-    string key = "myFolder/Mommy.txt";
+    std::string key = "myFolder/Mommy.txt";
 
-    size_t start;
+    std::size_t start;
     int filesize;
-    ifstream* filestream = file->find(key, &filesize, &start);
+    std::ifstream* filestream = file->find(key, &filesize, &start);
     if (filestream != nullptr) {
         if (filestream->is_open()) {
             char dataoutput[500];
-            filestream->seekg(start, ios_base::beg);
+            filestream->seekg(start, std::ios_base::beg);
             filestream->read(dataoutput, filesize);
-            cout << string(dataoutput, filesize);
+            std::cout << std::string(dataoutput, filesize);
         }
     }
 

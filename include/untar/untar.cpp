@@ -1,18 +1,17 @@
 #include "untar.h"
 
 namespace untar {
-	using namespace std;
 
 	tarEntry::tarEntry()
 	{
 
 	}
 	
-	tarEntry::tarEntry(string filename, int filesize, size_t startOfFile, tarEntryType type, string parentTarFilename, ifstream * tarfile)
+	tarEntry::tarEntry(std::string filename, int filesize, std::size_t startOfFile, tarEntryType type, std::string parentTarFilename, std::ifstream * tarfile)
 	{
 		_tarfile = tarfile;
 		_extracted = false;
-		_filename = string(filename);
+		_filename = std::string(filename);
 		_filesize = filesize;
 		_startOfFile = startOfFile;
 		_type = type;
@@ -29,7 +28,7 @@ namespace untar {
 		tarEntry(cpy._filename, cpy._filesize, cpy._startOfFile, cpy._type, cpy._parentTarFilename, cpy._tarfile);
 	}
 
-	string tarEntry::getParentFilename()
+	std::string tarEntry::getParentFilename()
 	{
 		return _parentTarFilename;
 	}
@@ -39,12 +38,12 @@ namespace untar {
 		return _filesize;
 	}
 
-	string tarEntry::getFilename()
+	std::string tarEntry::getFilename()
 	{
-		return string(_filename);
+		return std::string(_filename);
 	}
 
-	size_t tarEntry::getStartingByte()
+	std::size_t tarEntry::getStartingByte()
 	{
 		return _startOfFile;
 	}
@@ -54,10 +53,10 @@ namespace untar {
 		return tarEntryType();
 	}
 
-	ifstream* tarEntry::wantToExtract(int * filesize, size_t * startInMemory)
+	std::ifstream* tarEntry::wantToExtract(int * filesize, std::size_t * startInMemory)
 	{
 		if (_tarfile != nullptr) {
-			_tarfile->seekg(_startOfFile, ios_base::beg);
+			_tarfile->seekg(_startOfFile, std::ios_base::beg);
 		}
 		*filesize = _filesize;
 		*startInMemory = _startOfFile;
@@ -70,7 +69,7 @@ namespace untar {
 
 	tarFile::tarFile(char * filename, int filter)
 	{
-		open(filename, filter);
+		this->open(filename, filter);
 	}
 
 	tarFile::~tarFile()
@@ -81,7 +80,7 @@ namespace untar {
 		_tarfile.close();
 	}
 
-	tarEntry * tarFile::find(string filename)
+	tarEntry * tarFile::find(std::string filename)
 	{
 		auto it = entries.find(filename);
 		
@@ -91,7 +90,7 @@ namespace untar {
 		return it->second;
 	}
 
-	ifstream * tarFile::find(string filename, int * filesize, size_t * start)
+	std::ifstream * tarFile::find(std::string filename, int * filesize, std::size_t * start)
 	{
 		tarEntry * myEntry = find(filename);
 		if (myEntry == nullptr) {
@@ -106,7 +105,7 @@ namespace untar {
 	{
 		_get_all_entries = false;
 		_filename = filename;
-		_tarfile.open(_filename, ios_base::in | ios_base::binary);
+		_tarfile.open(_filename, std::ios_base::in | std::ios_base::binary);
 		if (!_tarfile.is_open()) {
 			// TODO
 			// Error Handling 
@@ -117,14 +116,14 @@ namespace untar {
 		}
 	}
 
-	string tarFile::getFilename()
+	std::string tarFile::getFilename()
 	{
 		return _filename;
 	}
 
-	void tarFile::addEntryToMap(string filename, int filesize, tarEntryType type) {
+	void tarFile::addEntryToMap(std::string filename, int filesize, tarEntryType type) {
 		tarEntry *entry = new tarEntry(filename, filesize, _tarfile.tellg(), type, _filename, &_tarfile);
-		entries.insert(std::pair<string, tarEntry *>(filename, entry));
+		entries.insert(std::pair<std::string, tarEntry *>(filename, entry));
 	}
 
 	// The tarMode::filter gives the ability to choose the files to see.
@@ -137,14 +136,14 @@ namespace untar {
 		if (_tarfile.is_open()) {
 			// TODO
 			// Keep an eye on bytes we read. Error handling to be implemented
-			size_t bytes_read = 0;
+			std::size_t bytes_read = 0;
 
 			// Go to beginning of the file, just to be sure
 			_tarfile.seekg(0);
 
 			char buff[512];
 			do {
-				size_t nextEntry = 0;
+				std::size_t nextEntry = 0;
 				// read the header
 				//_tarfile.read(&buff[0], 512);
 				_tarfile.read(buff, 512);
@@ -182,7 +181,7 @@ namespace untar {
 				// filename is \0 terminated... only if 99- chars long ! 
 				// So add a \0 as the 101th char for 100 char long filename. (no trim, faster, safer and nastier)
 				buff[100] = '\0';
-				string filename = string(buff);
+				std::string filename(buff);
 
 				if (filter == All) {
 					addEntryToMap(filename, filesize, type);
@@ -228,10 +227,10 @@ namespace untar {
 				}
 
 				// Prepare for next header, seek the filesize to the end direction
-				_tarfile.seekg(nextEntry, ios_base::cur);
+				_tarfile.seekg(nextEntry, std::ios_base::cur);
 
 				bytes_read += nextEntry;
-				// cout << "entry : " << string(buff) << " filesize : " << filesize << "\n";
+				// cout << "entry : " << std::string(buff) << " filesize : " << filesize << "\n";
 
 			} while (!_tarfile.eof()); // Even if the catch of the NULL header fail, we catch the EOF
 			_get_all_entries = true;
@@ -255,7 +254,7 @@ namespace untar {
 
 
 	/* Parse an octal number, ignoring leading and trailing nonsense. */
-	int tarFile::parseoct(const char *p, size_t n)
+	int tarFile::parseoct(const char *p, std::size_t n)
 	{
 		int i = 0;
 
@@ -287,6 +286,6 @@ namespace untar {
 		return (u == parseoct(p + 148, 8));
 	}
 
-	map<string, tarEntry *> tarFile::entries;
-	ifstream tarFile::_tarfile = ifstream();
+	std::map<std::string, tarEntry *> tarFile::entries;
+	std::ifstream tarFile::_tarfile = std::ifstream();
 }

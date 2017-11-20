@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     // If we want to find a file called Mommy.txt, use the map.find method
     // First define the key you are looking for. This is the filename in the tar
     // For example : myFolder/Mommy.txt
-    string key = "myFolder/Mommy.txt";
+    std::string key("myFolder/Mommy.txt");
 
     // Find the file itself
     auto it = file->entries.find(key);
@@ -29,9 +29,9 @@ int main(int argc, char** argv)
         tarEntry* data = it->second;
 
         // Get the ifstream, startbyte and filesize in one call
-        size_t start;
+        std::size_t start;
         int filesize;
-        ifstream* _tarfile = data->wantToExtract(&filesize, &start);
+        std::ifstream* _tarfile = data->wantToExtract(&filesize, &start);
 
         // NOTE : file->_tarfile.is_open() is the same as the one in the entries.
         // tarFile::_tarfile will be private in future release, it is for debugging reason
@@ -43,13 +43,13 @@ int main(int argc, char** argv)
         if (_tarfile->is_open()) {
 
             // Go to the beginning of the file and read the whole file
-            _tarfile->seekg(data->getStartingByte(), ios_base::beg);
+            _tarfile->seekg(data->getStartingByte(), std::ios_base::beg);
 
             // Read the data
             _tarfile->read(dataoutput, filesize);
 
             // Show the result
-            cout << string(dataoutput, filesize);
+            std::cout << std::string(dataoutput, filesize);
         }
     }
     system("pause");
