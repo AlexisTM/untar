@@ -1,6 +1,8 @@
 Untar - c++ TAR extraction implementation 
 =========
 
+NOTE: This project was developped before being versed in C++ and was unmaintained since (as I completely forgot about it and what I meant to use it for). You could use it as an example though, but I advise you to verify the code. 
+
 Another *simplified* c++ tar inflate implementation with *no dependency*. This implementation keeps the file open while the tarFile object is instantiated and gives you a map of tarEntry object which can each inflate themselves on demand. It is *your job* to create the files. This library only gives your the streams.
 
 **Untar** has been developed to compress SFML assets into one main file.
@@ -42,9 +44,11 @@ using namespace untar;
 int main(int argc, char **argv) {
     tarFile* file;
     ++argv; /* Skip program name */
-    if (*argv != NULL) {
-        file = new tarFile(*argv, File);
+    if (*argv == NULL) {
+    	return 1;
     }
+    
+    file = new tarFile(*argv, File);
 
     // We now have all the files ready to be extracted.
     // If we want to find a file called Mommy.txt, use the map.find method
@@ -84,6 +88,8 @@ int main(int argc, char **argv) {
            cout << string(dataoutput, filesize);
         }
     }
+
+    delete pause;
     system("pause");
 
     return (0);
