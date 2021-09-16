@@ -50,7 +50,7 @@ namespace untar {
 
 	tarEntryType tarEntry::getType()
 	{
-		return tarEntryType();
+		return _type;
 	}
 
 	std::ifstream* tarEntry::wantToExtract(int * filesize, std::size_t * startInMemory)
