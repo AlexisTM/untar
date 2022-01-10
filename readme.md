@@ -54,13 +54,13 @@ Usage
 using namespace untar;
 
 int main(int argc, char **argv) {
-    tarFile* file;
+    untar::tarFile* file;
     ++argv; /* Skip program name */
     if (*argv == NULL) {
     	return 1;
     }
 
-    file = new tarFile(*argv, File);
+    file = new untar::tarFile(*argv, untar::File);
 
     // We now have all the files ready to be extracted.
     // If we want to find a file called Mommy.txt, use the map.find method
@@ -74,12 +74,12 @@ int main(int argc, char **argv) {
     // If the file we found is NOT the end of the map (which means we did not find it), then extract the data !
     if (it != file->entries.end())
     {
-        tarEntry * data = it->second;
+        untar::tarEntry * data = it->second;
 
         // Get the ifstream, startbyte and filesize in one call
         size_t start;
         int filesize;
-        ifstream * _tarfile = data->wantToExtract(&filesize, &start);
+        std::ifstream * _tarfile = data->wantToExtract(&filesize, &start);
 
         // NOTE : file->_tarfile.is_open() is the same as the one in the entries.
         // tarFile::_tarfile will be private in future release, it is for debugging reason
@@ -97,11 +97,11 @@ int main(int argc, char **argv) {
            _tarfile->read(dataoutput, filesize);
 
            // Show the result
-           cout << string(dataoutput, filesize);
+           std::cout << string(dataoutput, filesize);
         }
     }
 
-    delete pause;
+    delete file;
     system("pause");
 
     return (0);

@@ -5,14 +5,12 @@
 // Launch the resulting executable with the tar file in argument, like :
 // main.exe example.tar
 
-using namespace untar;
-
 int main(int argc, char** argv)
 {
-    tarFile* file;
+    untar::tarFile* file;
     ++argv; /* Skip program name */
     if (*argv != NULL) {
-        file = new tarFile(*argv, File);
+        file = new untar::tarFile(*argv, untar::File);
     }
 
     // We now have all the files ready to be extracted.
@@ -26,7 +24,7 @@ int main(int argc, char** argv)
 
     // If the file we found is NOT the end of the map (which means we did not find it), then extract the data !
     if (it != file->entries.end()) {
-        tarEntry* data = it->second;
+        untar::tarEntry* data = it->second;
 
         // Get the ifstream, startbyte and filesize in one call
         std::size_t start;
@@ -52,6 +50,7 @@ int main(int argc, char** argv)
             std::cout << std::string(dataoutput, filesize) << std::endl;
         }
     }
+    delete file;
     system("pause");
 
     return (0);

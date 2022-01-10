@@ -4,14 +4,12 @@
 
 // Launch the resulting executable with the tar file in argument
 
-using namespace untar;
-
 int main(int argc, char** argv)
 {
-    tarFile* file;
+    untar::tarFile* file;
     ++argv; /* Skip program name */
     if (*argv != NULL) {
-        file = new tarFile(*argv, File);
+        file = new untar::tarFile(*argv, untar::File);
     }
 
     // We now have all the files ready to be extracted.
@@ -32,6 +30,7 @@ int main(int argc, char** argv)
         }
     }
 
+    delete file;
     system("pause");
 
     return (0);
