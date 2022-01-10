@@ -1,7 +1,7 @@
-Untar - c++ TAR extraction implementation 
+untar - In memory c++ TAR extraction implementation
 =========
 
-NOTE: This project was developped before being versed in C++ and was unmaintained since (as I completely forgot about it and what I meant to use it for). You could use it as an example though, but I advise you to verify the code. 
+NOTE: This project was developed before being versed in C++ and was unmaintained since (as I completely forgot about it and what I meant to use it for). You could use it as an example though, but I advise you to verify the code.
 
 Another *simplified* c++ tar inflate implementation with *no dependency*. This implementation keeps the file open while the tarFile object is instantiated and gives you a map of tarEntry object which can each inflate themselves on demand. It is *your job* to create the files. This library only gives your the streams.
 
@@ -14,6 +14,18 @@ Installation
 * Add untar/includes in the includes of your project or in your include dirs.
 * Add `#include "untar/untar.h"` in your headers
 * You are ready to go !
+
+Quick test
+----------
+
+You can test it quickly if you have g++ installed and a bash interpreter.
+
+```bash
+git clone https://github.com/AlexisTM/untar
+cd untar
+./build.sh
+./build/demo ./build/example.tar
+```
 
 Pros/cons
 ---------
@@ -30,8 +42,8 @@ Pros/cons
 ### Cons
 * No extraction on disk
 * No compression (not needed in my project, if you need it, feel free to contribute !)
-* You probably need to overload the final funciton (in tarEntry) to fits your needs
-* Not final version, but usefull
+* You probably need to overload the final functon (in tarEntry) to fits your needs
+* Not final version, but useful
 
 Usage
 ---------
@@ -47,7 +59,7 @@ int main(int argc, char **argv) {
     if (*argv == NULL) {
     	return 1;
     }
-    
+
     file = new tarFile(*argv, File);
 
     // We now have all the files ready to be extracted.
@@ -64,13 +76,13 @@ int main(int argc, char **argv) {
     {
         tarEntry * data = it->second;
 
-        // Get the ifstream, startbyte and filesize in one call        
+        // Get the ifstream, startbyte and filesize in one call
         size_t start;
         int filesize;
         ifstream * _tarfile = data->wantToExtract(&filesize, &start);
 
         // NOTE : file->_tarfile.is_open() is the same as the one in the entries.
-        // tarFile::_tarfile will be private in future release, it is for debugging reason  
+        // tarFile::_tarfile will be private in future release, it is for debugging reason
 
         // CARE THE OVERFLOW, ALWAYS
         char dataoutput[500];
@@ -103,9 +115,6 @@ Waiting for a better documentation.
 
 ```cpp
 namespace untar {
-
-	using namespace std;
-
 	// Type of file in the TAR documentation
 	enum tarEntryType {
 		FileCompatibilityType = '\0',
@@ -186,7 +195,7 @@ namespace untar {
 	class tarFile {
 		friend class tarEntry;
 	public:
-		// If you don't give a filename, don't forget to initiate via tarFile::open(...)  
+		// If you don't give a filename, don't forget to initiate via tarFile::open(...)
 		tarFile();
 		// Default initiation
 		tarFile(char * filename, int filter = All);
