@@ -1,4 +1,4 @@
-#include "untar.h"
+#include "untar/untar.h"
 
 namespace untar {
 
@@ -6,7 +6,7 @@ namespace untar {
 	{
 
 	}
-	
+
 	tarEntry::tarEntry(std::string filename, int filesize, std::size_t startOfFile, tarEntryType type, std::string parentTarFilename, std::ifstream * tarfile)
 	{
 		_tarfile = tarfile;
@@ -83,7 +83,7 @@ namespace untar {
 	tarEntry * tarFile::find(std::string filename)
 	{
 		auto it = entries.find(filename);
-		
+
 		if (it == entries.end())
 			return nullptr;
 
@@ -108,7 +108,7 @@ namespace untar {
 		_tarfile.open(_filename, std::ios_base::in | std::ios_base::binary);
 		if (!_tarfile.is_open()) {
 			// TODO
-			// Error Handling 
+			// Error Handling
 			//cout << "Unable to open file : " << _filename << "\n";
 		}
 		else {
@@ -148,7 +148,7 @@ namespace untar {
 				//_tarfile.read(&buff[0], 512);
 				_tarfile.read(buff, 512);
 				bytes_read += _tarfile.gcount();
-				
+
 				// EndOfFile
 				if (isNullHeader(buff))
 					return;
@@ -159,7 +159,7 @@ namespace untar {
 					// Error handling to be implemented
 					return;
 				}
-				
+
 				// read the filesize at buff[124], 12 bytes
 				int filesize = parseoct(&buff[0] + 124, 12);
 
@@ -170,15 +170,15 @@ namespace untar {
 					if (filesize % 512 == 0) {
 						nextEntry = filesize;
 					}
-						
+
 					else {
 						nextEntry = (512 * (1 + filesize / 512));
 					}
 				}
-				
+
 				tarEntryType type = static_cast<tarEntryType>(buff[156]);
 
-				// filename is \0 terminated... only if 99- chars long ! 
+				// filename is \0 terminated... only if 99- chars long !
 				// So add a \0 as the 101th char for 100 char long filename. (no trim, faster, safer and nastier)
 				buff[100] = '\0';
 				std::string filename(buff);
@@ -210,7 +210,7 @@ namespace untar {
 							addEntryToMap(filename, filesize, type);
 						break;
 					case DirType:
-						if (filter & tarMode::Dir) 
+						if (filter & tarMode::Dir)
 							addEntryToMap(filename, filesize, type);
 						break;
 					case FifoType:
@@ -248,7 +248,7 @@ namespace untar {
 			if (p[n] != '\0')
 				return false;
 		return true;
-	
+
 	}
 
 

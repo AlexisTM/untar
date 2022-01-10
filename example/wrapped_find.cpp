@@ -28,7 +28,7 @@ int main(int argc, char** argv)
             char dataoutput[500];
             filestream->seekg(start, std::ios_base::beg);
             filestream->read(dataoutput, filesize);
-            std::cout << std::string(dataoutput, filesize);
+            std::cout << std::string(dataoutput, filesize) << std::endl;;
         }
     }
 

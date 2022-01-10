@@ -49,7 +49,7 @@ int main(int argc, char** argv)
             _tarfile->read(dataoutput, filesize);
 
             // Show the result
-            std::cout << std::string(dataoutput, filesize);
+            std::cout << std::string(dataoutput, filesize) << std::endl;
         }
     }
     system("pause");
