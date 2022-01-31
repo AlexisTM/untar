@@ -2,10 +2,7 @@
 
 namespace untar {
 
-	tarEntry::tarEntry()
-	{
-
-	}
+	tarEntry::tarEntry() = default;
 
 	tarEntry::tarEntry(std::string filename, int filesize, std::size_t startOfFile, tarEntryType type, std::string parentTarFilename, std::ifstream * tarfile)
 	{
@@ -63,9 +60,7 @@ namespace untar {
 		return _tarfile;
 	}
 
-	tarFile::tarFile()
-	{
-	}
+	tarFile::tarFile() = default;
 
 	tarFile::tarFile(char * filename, int filter)
 	{
