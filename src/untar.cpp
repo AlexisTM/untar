@@ -99,7 +99,7 @@ void tarFile::getAllEntries(int filter) {
   if (_tarfile.is_open()) {
     // TODO
     // Keep an eye on bytes we read. Error handling to be implemented
-    std::size_t bytes_read = 0;
+    [[maybe_unused]] std::size_t bytes_read = 0;
 
     // Go to beginning of the file, just to be sure
     _tarfile.seekg(0);
