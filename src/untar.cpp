@@ -108,8 +108,7 @@ void tarFile::getAllEntries(int filter) {
     do {
       std::size_t nextEntry = 0;
       // read the header
-      //_tarfile.read(&buff[0], 512);
-      _tarfile.read(buff, 512);
+      _tarfile.read(buff, sizeof(buff));
       bytes_read += _tarfile.gcount();
 
       // EndOfFile
@@ -126,18 +125,8 @@ void tarFile::getAllEntries(int filter) {
       // read the filesize at buff[124], 12 bytes
       int filesize = parseoct(&buff[0] + 124, 12);
 
-      // The actual size on disk of the file is a multiple of 512 in tar format
-      nextEntry = 0;
-      if (filesize) // filesize > 0
-      {
-        if (filesize % 512 == 0) {
-          nextEntry = filesize;
-        }
-
-        else {
-          nextEntry = (512 * (1 + filesize / 512));
-        }
-      }
+      // Round up to next 512-byte block
+      nextEntry = (filesize + 511u) & ~511u;
 
       tarEntryType type = static_cast<tarEntryType>(buff[156]);
 
