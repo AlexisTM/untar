@@ -1,7 +1,7 @@
 #include "untar/untar.h"
+#include <cstdlib>
 #include <iostream>
 #include <stdio.h>
-
 
 // Launch the resulting executable with the tar file in argument
 
@@ -10,6 +10,9 @@ int main(int argc, char **argv) {
   ++argv; /* Skip program name */
   if (*argv != NULL) {
     file = new untar::tarFile(*argv, untar::File);
+  } else {
+    std::cout << "Provide the tarfile name." << std::endl;
+    return EXIT_FAILURE;
   }
 
   // We now have all the files ready to be extracted.
@@ -34,5 +37,5 @@ int main(int argc, char **argv) {
   delete file;
   system("pause");
 
-  return (0);
+  return EXIT_SUCCESS;
 }
